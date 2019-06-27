@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "SDK of 36node weather service for javascript.",
   "repository": {
-    "url": "36node/weather-sdk",
+    "url": "36node/weather-sdk-js",
     "type": "git"
   },
   "license": "MIT",
