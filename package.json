@@ -1,6 +1,6 @@
 {
   "name": "@36node/weather-sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SDK of 36node weather service for javascript.",
   "repository": {
     "url": "36node/weather-sdk-js",
