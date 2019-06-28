@@ -13,11 +13,84 @@ servers:
 paths:
   /weather:
     get:
+      summary: List weather
+      operationId: listWeather
+      tags:
+        - weather
+      parameters:
+        - name: _limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: _offset
+          in: query
+          description: How many items to escape
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: interval
+          in: query
+          description: 时间间隔
+          schema:
+            type: string
+        - name: date_gt
+          in: query
+          description: 天气时间大于
+          schema:
+            type: string
+            format: date
+        - name: date_lt
+          in: query
+          description: 天气时间小于
+          schema:
+            type: string
+            format: date
+        - name: location
+          in: query
+          description: location of weather
+          required: false
+          schema:
+            type: string
+            default: "上海"
+      responses:
+        "200":
+          description: A paged array of weather
+          headers:
+            X-Total-Count:
+              description: Total count of all weather match the query
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Weather"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /weather/{date}:
+    get:
       summary: Get weather
       operationId: getWeather
       tags:
         - weather
       parameters:
+        - name: date
+          in: path
+          description: date of weather
+          required: true
+          schema:
+            type: string
+            format: date
         - name: location
           in: query
           description: location of weather
@@ -77,6 +150,9 @@ components:
         temperature:
           type: number
           description: 气温，单位为摄氏度
+        humidity:
+          type: number
+          description: 相对湿度，0~100，单位为百分比
         lastUpdated:
           type: string
           format: date
@@ -103,6 +179,12 @@ components:
         low:
           type: string
           format: 今日最低气温
+        high_humidity:
+          type: string
+          format: 今日最高湿度
+        low_humidity:
+          type: string
+          format: 今日最低湿度
         wind_direction:
           type: string
           format: 风向

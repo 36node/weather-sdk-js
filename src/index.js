@@ -37,15 +37,32 @@ export default class SDK {
    */
   weather = {
     /**
+     * List weather
+     *
+     * @param {ListWeatherRequest} req listWeather request
+     * @returns {Promise<ListWeatherResponse>} A paged array of weather
+     */
+    listWeather: (req = {}) => {
+      const { query, headers } = req;
+
+      return fetch(`${this.base}/weather`, {
+        method: "get",
+        query: denormalize(query),
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+    /**
      * Get weather
      *
      * @param {GetWeatherRequest} req getWeather request
      * @returns {Promise<GetWeatherResponse>} Current weather of location
      */
     getWeather: (req = {}) => {
-      const { query, headers } = req;
+      const { date, query, headers } = req;
 
-      return fetch(`${this.base}/weather`, {
+      if (!date) throw new Error("date is required for getWeather");
+
+      return fetch(`${this.base}/weather/${date}`, {
         method: "get",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
