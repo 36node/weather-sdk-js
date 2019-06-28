@@ -1,0 +1,130 @@
+openapi: "3.0.0"
+info:
+  version: 0.1.0
+  title: Petstore Service
+  license:
+    name: MIT
+servers:
+  - url: https://api.36node.com{basePath}
+    description: The production API server
+    variables:
+      basePath:
+        default: /petstore/v0
+paths:
+  /weather:
+    get:
+      summary: Get weather
+      operationId: getWeather
+      tags:
+        - weather
+      parameters:
+        - name: location
+          in: query
+          description: location of weather
+          required: false
+          schema:
+            type: string
+            default: "上海"
+      responses:
+        "200":
+          description: Current weather of location
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Weather"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+security:
+  - bearerAuth: []
+
+components:
+  responses:
+    NoContent:
+      description: The resource was deleted successfully.
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Err"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Err"
+    InternalError:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Err"
+  schemas:
+    Weather:
+      type: object
+      properties:
+        text:
+          type: string
+          description: 天气描述，例如 晴，多云之类
+        code:
+          type: string
+          description: 天气代码, 参考 https://www.seniverse.com/doc#code
+        temperature:
+          type: number
+          description: 气温，单位为摄氏度
+        lastUpdated:
+          type: string
+          format: date
+          description: 天气最后更新时间
+        date:
+          type: string
+          format: date
+          description: 预报的日期
+        text_day:
+          type: string
+          format: 今日白天天气描述
+        code_day:
+          type: string
+          format: 白天天气代码
+        text_night:
+          type: string
+          format: 今日夜间天气描述
+        code_night:
+          type: string
+          format: 白天夜间代码
+        high:
+          type: string
+          format: 今日最高气温
+        low:
+          type: string
+          format: 今日最低气温
+        wind_direction:
+          type: string
+          format: 风向
+        wind_direction_degree:
+          type: string
+          format: 风向角度
+        wind_speed:
+          type: string
+          format: 风速
+    Err:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
