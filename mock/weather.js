@@ -11,7 +11,7 @@ function genWeather(start, days) {
       id: date,
       text: faker.random.arrayElement(["晴", "多云", "雨", "雪"]),
       code: faker.random.number(26),
-      temperature: faker.random.number(40),
+      temperature: faker.random.number({ min: 26, max: 34 }),
       date,
       text_day: faker.random.arrayElement(["晴", "多云", "雨", "雪"]),
       code_day: faker.random.number(26),
